@@ -1,5 +1,6 @@
 #include "WanderState.h"
 #include <iostream>
+#include "Agent.h"
 
 WanderState::WanderState(Agent* agent)
 {
@@ -13,7 +14,8 @@ void WanderState::Enter(Agent* agent)
 
 void WanderState::Update(Agent* agent, float dt)
 {
-	std::cout << "Wander update" << std::endl;
+	if (agent->pathIsEmpty())
+		agent->createPathToRandomMazePoint();
 }
 
 void WanderState::Exit(Agent* agent)

@@ -10,6 +10,7 @@ FSM::FSM(Agent* agent)
 
 FSM::~FSM()
 {
+
 }
 
 void FSM::Update(Agent* agent, float dtime)
@@ -19,6 +20,7 @@ void FSM::Update(Agent* agent, float dtime)
 
 void FSM::ChangeState(FSMState* new_state)
 {
+	std::cout << "Change state" << std::endl;
 	delete current_state;
 	current_state = new_state;
 }

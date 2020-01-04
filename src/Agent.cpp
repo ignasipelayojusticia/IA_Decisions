@@ -85,6 +85,11 @@ void Agent::setGraph(Graph* _graph) {
 	graph = _graph;
 }
 
+void Agent::setGrid(Grid* _grid)
+{
+	grid = _grid;
+}
+
 void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
 {
 	brain = decisionMaking;
@@ -108,7 +113,7 @@ void Agent::update(float dtime, SDL_Event *event)
 	steering_behaviour->applySteeringForce(this, dtime);
 
 	//Apply decision making algorithm
-	brain->update(this, dtime);
+	brain->Update(this, dtime);
 	
 	// Update orientation
 	if (velocity.Length())
@@ -151,6 +156,19 @@ Vector2D Agent::getPathPoint(int idx)
 	return path.points[idx];
 }
 
+int Agent::getRandomMazePoint()
+{
+	auto it = graph->map.begin();
+	std::advance(it, rand() % graph->map.size());
+	int newMazePoint = it->first;
+	return newMazePoint;
+}
+
+void Agent::createPathToRandomMazePoint()
+{
+	calculatePath(getRandomMazePoint());
+}
+
 void Agent::clearPath()
 {
 	setCurrentTargetIndex(-1);
@@ -162,16 +180,28 @@ void Agent::setCurrentTargetIndex(int idx)
 	currentTargetIndex = idx;
 }
 
-void Agent::calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid)
+void Agent::calculatePath(int _initialNodeID, int _finalNodeID, Grid* _grid)
 {
 	clearPath();
-	path = pathfinding_Algorithm->calculatePath(_initialNodeID, _finalNodeID, graph, grid);
+	path = pathfinding_Algorithm->calculatePath(_initialNodeID, _finalNodeID, graph, _grid);
+}
+
+void Agent::calculatePath(int _finalNodeID)
+{
+	clearPath();
+	int initialNodeID = GetNodeID(grid->pix2cell(getPosition()), graph->w);
+	path = pathfinding_Algorithm->calculatePath(initialNodeID, _finalNodeID, graph, grid);
 }
 
 void Agent::calculateMultiplePath(int _initialNodeID, int _finalNodeID, std::vector<int> _vID, Grid* grid) 
 {
 	clearPath();
 	path = pathfinding_Algorithm->calculateMultiplePath(_initialNodeID, _finalNodeID, _vID, graph, grid);
+}
+
+bool Agent::pathIsEmpty()
+{
+	return path.points.size() == 0;
 }
 
 void Agent::addEnemyCost(int _enemyPosID, Grid* grid)

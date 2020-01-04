@@ -60,7 +60,7 @@ Path AStar::calculatePath(int _initialNodeID, int _finalNodeID, Graph * graph, G
 			else if (new_cost < costSoFar[con->nodeToID])		// Si ja l'hem explorat però trobem un camí més curt
 			{
 				costSoFar[con->nodeToID] = new_cost;	// Assignem el nou cost so far
-				auto it2 = std::find_if(frontier.begin(), frontier.end(),
+				auto it2 = std::find_if(frontier.begin(), frontier.end() - 1,
 					[&con](const std::pair<int, float>& element) { return element.first == con->nodeToID; }); // Busquem el node de la frontera antic
 				frontier.erase(it2);	// Esborrem el node antic que té un cost més elevat
 				frontier.push_back(std::pair<int, float>(con->nodeToID, new_cost + heuristic)); // Posem el node a la frontera amb el cost actualitzat

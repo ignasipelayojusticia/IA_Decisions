@@ -13,5 +13,4 @@ public:
 	std::map<int , std::vector<Connection*>> map;
 
 	int w;
-
 };

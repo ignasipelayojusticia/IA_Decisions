@@ -17,6 +17,7 @@ ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 	agent->setPathFindingAlgorithm(new AStar);
 	agent->setTarget(Vector2D(-20,-20));
 	agent->setGraph(new Graph(maze));
+	agent->setGrid(maze);
 	agent->setDecisionMaking(new FSM(agent));
 	agents.push_back(agent);
 

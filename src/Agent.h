@@ -9,6 +9,7 @@
 #include "Graph.h"
 #include "Vector2D.h"
 #include "utils.h"
+#include <cstdlib>
 
 class Agent
 {
@@ -26,7 +27,7 @@ public:
 	public:
 		DecisionMaking() {};
 		virtual ~DecisionMaking() {};
-		virtual void update(Agent* agent, float dtime) {};
+		virtual void Update(Agent* agent, float dtime) {};
 	};
 
 private:
@@ -40,6 +41,7 @@ private:
 	Graph* graph;
 	int currentTargetIndex;
 	Path path;
+	Grid* grid;
 
 	//Decision Making
 	DecisionMaking* brain;
@@ -71,10 +73,12 @@ public:
 	void setTarget(Vector2D target);
 	void setVelocity(Vector2D velocity);
 	void setGraph(Graph* graph);
+	void setGrid(Grid* grid);
 	void setDecisionMaking(DecisionMaking* decisionMaking);
 	void addPathPoint(Vector2D point);
 	void setCurrentTargetIndex(int idx);
 	void calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid);
+	void calculatePath(int _finalNodeID);
 	void calculateMultiplePath(int _initialNodeID, int _finalNodeID, std::vector<int> _vID, Grid* grid);
 	void addEnemyCost(int _enemyPosID, Grid* grid);
 	void addCostToNode(int _nodeID, float costToAdd);
@@ -82,7 +86,10 @@ public:
 	int getPathSize();
 	Graph* getGraph();
 	Vector2D getPathPoint(int idx);
+	int getRandomMazePoint();
+	void createPathToRandomMazePoint();
 	void clearPath();
+	bool pathIsEmpty();
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);	
