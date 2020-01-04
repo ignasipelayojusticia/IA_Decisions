@@ -8,6 +8,7 @@
 #include "Agent.h"
 #include "Seek.h"
 #include "PathFollowing.h"
+#include "FSM.h"
 #include "AStar.h"
 #include "Grid.h"
 

@@ -20,17 +20,29 @@ public:
 		virtual ~SteeringBehavior() {};
 		virtual void applySteeringForce(Agent *agent, float dtime) {};
 	};
+	
+	class DecisionMaking
+	{
+	public:
+		DecisionMaking() {};
+		virtual ~DecisionMaking() {};
+		virtual void update(Agent* agent, float dtime) {};
+	};
 
 private:
 	SteeringBehavior *steering_behaviour;
-	Pathfinding* pathfinding_Algorithm;
 	Vector2D position;
 	Vector2D velocity;
 	Vector2D target;
+
+	//Pathfinding
+	Pathfinding* pathfinding_Algorithm;
 	Graph* graph;
-
-
 	int currentTargetIndex;
+	Path path;
+
+	//Decision Making
+	DecisionMaking* brain;
 
 	float mass;
 	float orientation;
@@ -45,8 +57,6 @@ private:
 
 public:
 
-	// Pathfinding
-	Path path;
 	Agent();
 	~Agent();
 	Vector2D getPosition();
@@ -61,6 +71,7 @@ public:
 	void setTarget(Vector2D target);
 	void setVelocity(Vector2D velocity);
 	void setGraph(Graph* graph);
+	void setDecisionMaking(DecisionMaking* decisionMaking);
 	void addPathPoint(Vector2D point);
 	void setCurrentTargetIndex(int idx);
 	void calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid);

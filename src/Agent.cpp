@@ -85,9 +85,13 @@ void Agent::setGraph(Graph* _graph) {
 	graph = _graph;
 }
 
+void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
+{
+	brain = decisionMaking;
+}
+
 void Agent::update(float dtime, SDL_Event *event)
 {
-
 	//cout << "agent update:" << endl;
 
 	switch (event->type) {
@@ -102,6 +106,9 @@ void Agent::update(float dtime, SDL_Event *event)
 
 	// Apply the steering behavior
 	steering_behaviour->applySteeringForce(this, dtime);
+
+	//Apply decision making algorithm
+	brain->update(this, dtime);
 	
 	// Update orientation
 	if (velocity.Length())
