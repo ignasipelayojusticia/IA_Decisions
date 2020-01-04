@@ -36,6 +36,11 @@ void Agent::setPathFindingAlgorithm(Pathfinding * algorithm)
 	pathfinding_Algorithm = algorithm;
 }
 
+void Agent::setMaxVelocity(float maxVel)
+{
+	max_velocity = maxVel;
+}
+
 Vector2D Agent::getPosition()
 {
 	return position;
@@ -95,9 +100,9 @@ void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
 	brain = decisionMaking;
 }
 
-void Agent::setHasGun(bool _hasGun)
+void Agent::changeHasGun()
 {
-	hasGun = _hasGun;
+	hasGun = !hasGun;
 }
 
 void Agent::update(float dtime, SDL_Event *event)
@@ -182,6 +187,12 @@ bool Agent::getHasGun()
 void Agent::createPathToRandomMazePoint()
 {
 	calculatePath(getRandomMazePoint());
+}
+
+void Agent::createPathToEnemy()
+{
+	int finalNode = GetNodeID(grid->pix2cell(enemy->getPosition()), graph->w);
+	calculatePath(finalNode);
 }
 
 void Agent::clearPath()

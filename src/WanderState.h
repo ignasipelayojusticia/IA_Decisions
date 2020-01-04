@@ -8,4 +8,7 @@ public:
 	void Enter(Agent* agent);
 	void Update(Agent* agent, float dt);
 	void Exit(Agent* agent);
+
+private:
+	bool followingEnemy;
 };

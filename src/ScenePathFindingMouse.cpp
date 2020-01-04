@@ -22,6 +22,7 @@ ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 
 	Agent* enemy = new Agent;
 	enemy->loadSpriteTexture("../res/zombie2.png", 8);
+	enemy->setMaxVelocity(enemy->getMaxVelocity() * 0.8f);
 	enemy->setBehavior(new PathFollowing);
 	enemy->setPathFindingAlgorithm(new AStar);
 	enemy->setGraph(new Graph(maze));
@@ -65,7 +66,7 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
 		{
-			agents[1]->setHasGun(!agents[1]->getHasGun());
+			agents[1]->changeHasGun();
 		}
 
 		break;

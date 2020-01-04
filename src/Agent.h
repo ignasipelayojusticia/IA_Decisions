@@ -76,11 +76,12 @@ public:
 	void setPosition(Vector2D position);
 	void setTarget(Vector2D target);
 	void setVelocity(Vector2D velocity);
+	void setMaxVelocity(float maxVel);
 	void setGraph(Graph* graph);
 	void setGrid(Grid* grid);
 	void setDecisionMaking(DecisionMaking* decisionMaking);
 	void setEnemy(Agent* agent);
-	void setHasGun(bool hasGun);
+	void changeHasGun();
 	void addPathPoint(Vector2D point);
 	void setCurrentTargetIndex(int idx);
 	void calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid);
@@ -96,6 +97,7 @@ public:
 	Agent* getEnemy();
 	bool getHasGun();
 	void createPathToRandomMazePoint();
+	void createPathToEnemy();
 	void clearPath();
 	bool pathIsEmpty();
 	void update(float dtime, SDL_Event *event);

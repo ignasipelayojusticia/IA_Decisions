@@ -15,12 +15,30 @@ void WanderState::Enter(Agent* agent)
 void WanderState::Update(Agent* agent, float dt)
 {
 	if (agent->pathIsEmpty())
-		agent->createPathToRandomMazePoint();
+		followingEnemy = false;
 
-	if (agent->getEnemy() == NULL)
-		std::cout << "no enemy" << std::endl;
-	else
-		std::cout << "has enemy" << std::endl;
+	if (agent->getEnemy() != NULL)
+	{
+		Vector2D enemyPosition = agent->getEnemy()->getPosition();
+		Vector2D agentPosition = agent->getPosition();
+
+		draw_circle(TheApp::Instance()->getRenderer(), (int)agentPosition.x, (int)agentPosition.y, 150, 255, 255, 255, 255);
+
+		if (Vector2D::Distance(enemyPosition, agent->getPosition()) < 150 && !followingEnemy && !agent->getEnemy()->getHasGun())
+		{
+			followingEnemy = true;
+			agent->createPathToEnemy();
+			std::cout << "path to enemy" << std::endl;
+		}
+
+		if (agent->getEnemy()->getHasGun())
+		{
+
+		}
+	}
+
+	if (agent->pathIsEmpty() && !followingEnemy)
+		agent->createPathToRandomMazePoint();
 }
 
 void WanderState::Exit(Agent* agent)
