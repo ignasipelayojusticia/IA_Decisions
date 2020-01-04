@@ -36,6 +36,10 @@ private:
 	Vector2D velocity;
 	Vector2D target;
 
+	//Enemy
+	Agent* enemy;
+	bool hasGun;
+
 	//Pathfinding
 	Pathfinding* pathfinding_Algorithm;
 	Graph* graph;
@@ -75,6 +79,8 @@ public:
 	void setGraph(Graph* graph);
 	void setGrid(Grid* grid);
 	void setDecisionMaking(DecisionMaking* decisionMaking);
+	void setEnemy(Agent* agent);
+	void setHasGun(bool hasGun);
 	void addPathPoint(Vector2D point);
 	void setCurrentTargetIndex(int idx);
 	void calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid);
@@ -87,6 +93,8 @@ public:
 	Graph* getGraph();
 	Vector2D getPathPoint(int idx);
 	int getRandomMazePoint();
+	Agent* getEnemy();
+	bool getHasGun();
 	void createPathToRandomMazePoint();
 	void clearPath();
 	bool pathIsEmpty();

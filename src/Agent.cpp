@@ -95,6 +95,11 @@ void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
 	brain = decisionMaking;
 }
 
+void Agent::setHasGun(bool _hasGun)
+{
+	hasGun = _hasGun;
+}
+
 void Agent::update(float dtime, SDL_Event *event)
 {
 	//cout << "agent update:" << endl;
@@ -164,6 +169,16 @@ int Agent::getRandomMazePoint()
 	return newMazePoint;
 }
 
+Agent* Agent::getEnemy()
+{
+	return enemy;
+}
+
+bool Agent::getHasGun()
+{
+	return hasGun;
+}
+
 void Agent::createPathToRandomMazePoint()
 {
 	calculatePath(getRandomMazePoint());
@@ -178,6 +193,11 @@ void Agent::clearPath()
 void Agent::setCurrentTargetIndex(int idx)
 {
 	currentTargetIndex = idx;
+}
+
+void Agent::setEnemy(Agent* agent)
+{
+	enemy = agent;
 }
 
 void Agent::calculatePath(int _initialNodeID, int _finalNodeID, Grid* _grid)
@@ -253,12 +273,13 @@ void Agent::addCostToNode(int _nodeID, float costToAdd)
 void Agent::draw()
 {
 	// Path
-	for (int i = 0; i < (int)path.points.size(); i++)
+	
+	/*for (int i = 0; i < (int)path.points.size(); i++)
 	{
 		draw_circle(TheApp::Instance()->getRenderer(), (int)(path.points[i].x), (int)(path.points[i].y), 15, 255, 255, 0, 255);
 		if (i > 0)
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)(path.points[i - 1].x), (int)(path.points[i - 1].y), (int)(path.points[i].x), (int)(path.points[i].y));
-	}
+	}*/
 
 	if (draw_sprite)
 	{

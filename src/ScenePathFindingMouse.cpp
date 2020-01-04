@@ -15,24 +15,29 @@ ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 	agent->loadSpriteTexture("../res/soldier.png", 4);
 	agent->setBehavior(new PathFollowing);
 	agent->setPathFindingAlgorithm(new AStar);
-	agent->setTarget(Vector2D(-20,-20));
 	agent->setGraph(new Graph(maze));
 	agent->setGrid(maze);
 	agent->setDecisionMaking(new FSM(agent));
 	agents.push_back(agent);
 
+	Agent* enemy = new Agent;
+	enemy->loadSpriteTexture("../res/zombie2.png", 8);
+	enemy->setBehavior(new PathFollowing);
+	enemy->setPathFindingAlgorithm(new AStar);
+	enemy->setGraph(new Graph(maze));
+	enemy->setDecisionMaking(new FSM(agent));
+	agents.push_back(enemy);
+
+	agents[0]->setEnemy(agents[1]);
 
 	// set agent position coords to the center of a random cell
-	Vector2D rand_cell(-1,-1);
-	while (!maze->isValidCell(rand_cell))
-		rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-	agents[0]->setPosition(maze->cell2pix(rand_cell));
-
-	// set the coin in a random cell (but at least 3 cells far from the agent)
-	coinPosition = Vector2D(-1,-1);
-	while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3))
-		coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-
+	for (int i = 0; i < agents.size(); i++)
+	{
+		Vector2D rand_cell(-1,-1);
+		while (!maze->isValidCell(rand_cell))
+			rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+		agents[i]->setPosition(maze->cell2pix(rand_cell));
+	}
 }
 
 ScenePathFindingMouse::~ScenePathFindingMouse()
@@ -60,21 +65,16 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
 		{
-			Vector2D cell = maze->pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
-			if (maze->isValidCell(cell)) 
-			{
-				int initialPosID = GetNodeID(maze->pix2cell(agents[0]->getPosition()), agents[0]->getGraph()->w);
-				int finalPosID = GetNodeID(cell, agents[0]->getGraph()->w);
-
-				agents[0]->calculatePath(initialPosID,finalPosID, maze);
-			}
+			agents[1]->setHasGun(!agents[1]->getHasGun());
 		}
+
 		break;
 	default:
 		break;
 	}
 
 	agents[0]->update(dtime, event);
+	agents[1]->update(dtime, event);
 
 	// if we have arrived to the coin, replace it in a random cell!
 	if ((agents[0]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[0]->getPosition()) == coinPosition))
@@ -104,7 +104,8 @@ void ScenePathFindingMouse::draw()
 		}
 	}
 
-	agents[0]->draw();
+	for(int i = 0; i < agents.size(); i++)
+		agents[i]->draw();
 }
 
 const char* ScenePathFindingMouse::getTitle()

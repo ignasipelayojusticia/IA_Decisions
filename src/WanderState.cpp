@@ -16,6 +16,11 @@ void WanderState::Update(Agent* agent, float dt)
 {
 	if (agent->pathIsEmpty())
 		agent->createPathToRandomMazePoint();
+
+	if (agent->getEnemy() == NULL)
+		std::cout << "no enemy" << std::endl;
+	else
+		std::cout << "has enemy" << std::endl;
 }
 
 void WanderState::Exit(Agent* agent)
