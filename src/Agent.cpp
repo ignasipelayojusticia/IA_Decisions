@@ -86,7 +86,8 @@ void Agent::setVelocity(Vector2D _velocity)
 	velocity = _velocity;
 }
 
-void Agent::setGraph(Graph* _graph) {
+void Agent::setGraph(Graph* _graph) 
+{
 	graph = _graph;
 }
 
@@ -103,11 +104,14 @@ void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
 void Agent::changeHasGun()
 {
 	hasGun = !hasGun;
+	if (hasGun)
+		std::cout << "Now enemy has gun" << std::endl;
+	else
+		std::cout << "Now enemy doesn't have gun" << std::endl;
 }
 
 void Agent::update(float dtime, SDL_Event *event)
 {
-	//cout << "agent update:" << endl;
 
 	switch (event->type) {
 		/* Keyboard & Mouse events */

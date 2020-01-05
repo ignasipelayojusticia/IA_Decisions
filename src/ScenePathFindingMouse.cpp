@@ -11,25 +11,24 @@ ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 
 	srand((unsigned int)time(NULL));
 
-	Agent *agent = new Agent;
-	agent->loadSpriteTexture("../res/soldier.png", 4);
-	agent->setBehavior(new PathFollowing);
-	agent->setPathFindingAlgorithm(new AStar);
-	agent->setGraph(new Graph(maze));
-	agent->setGrid(maze);
-	agent->setDecisionMaking(new FSM(agent));
-	agents.push_back(agent);
-
 	Agent* enemy = new Agent;
 	enemy->loadSpriteTexture("../res/zombie2.png", 8);
 	enemy->setMaxVelocity(enemy->getMaxVelocity() * 0.8f);
 	enemy->setBehavior(new PathFollowing);
 	enemy->setPathFindingAlgorithm(new AStar);
 	enemy->setGraph(new Graph(maze));
-	enemy->setDecisionMaking(new FSM(agent));
+	enemy->setDecisionMaking(new FSM(enemy));
 	agents.push_back(enemy);
 
-	agents[0]->setEnemy(agents[1]);
+	Agent* agent = new Agent;
+	agent->loadSpriteTexture("../res/soldier.png", 4);
+	agent->setEnemy(agents[0]);
+	agent->setBehavior(new PathFollowing);
+	agent->setPathFindingAlgorithm(new AStar);
+	agent->setGraph(new Graph(maze));
+	agent->setGrid(maze);
+	agent->setDecisionMaking(new FSM(agent));
+	agents.push_back(agent);
 
 	// set agent position coords to the center of a random cell
 	for (int i = 0; i < agents.size(); i++)
@@ -65,17 +64,14 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 	case SDL_MOUSEMOTION:
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			agents[1]->changeHasGun();
-		}
-
+			agents[0]->changeHasGun();
 		break;
 	default:
 		break;
 	}
 
-	agents[0]->update(dtime, event);
-	agents[1]->update(dtime, event);
+	for (int i = 0; i < agents.size(); i++)
+		agents[i]->update(dtime, event);
 
 	// if we have arrived to the coin, replace it in a random cell!
 	if ((agents[0]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[0]->getPosition()) == coinPosition))
