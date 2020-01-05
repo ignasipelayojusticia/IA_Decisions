@@ -200,6 +200,15 @@ void Agent::createPathToEnemy()
 	calculatePath(finalNode);
 }
 
+void Agent::createPathFleeingEnemy()
+{
+	Vector2D playerEnemy = enemy->getPosition() - position;
+	playerEnemy = Vector2D::Normalize(playerEnemy);
+	Vector2D destinationPos = position - playerEnemy * 100;
+	if(grid->isValidCell(grid->pix2cell(destinationPos)))
+		calculatePath(GetNodeID(grid->pix2cell(destinationPos), graph->w));
+}
+
 void Agent::clearPath()
 {
 	setCurrentTargetIndex(-1);

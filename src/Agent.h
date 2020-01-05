@@ -98,6 +98,7 @@ public:
 	bool getHasGun();
 	void createPathToRandomMazePoint();
 	void createPathToEnemy();
+	void createPathFleeingEnemy();
 	void clearPath();
 	bool pathIsEmpty();
 	void update(float dtime, SDL_Event *event);

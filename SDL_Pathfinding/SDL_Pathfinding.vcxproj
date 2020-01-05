@@ -133,9 +133,9 @@
   <ItemGroup>
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\AStar.cpp" />
-    <ClCompile Include="..\src\ChaseState.cpp" />
     <ClCompile Include="..\src\Connection.cpp" />
     <ClCompile Include="..\src\FSM.cpp" />
+    <ClCompile Include="..\src\FSMStates.cpp" />
     <ClCompile Include="..\src\Graph.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -145,15 +145,14 @@
     <ClCompile Include="..\src\SDL_SimpleApp.cpp" />
     <ClCompile Include="..\src\Seek.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
-    <ClCompile Include="..\src\WanderState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Agent.h" />
     <ClInclude Include="..\src\AStar.h" />
-    <ClInclude Include="..\src\ChaseState.h" />
     <ClInclude Include="..\src\Connection.h" />
     <ClInclude Include="..\src\FSM.h" />
     <ClInclude Include="..\src\FSMState.h" />
+    <ClInclude Include="..\src\FSMStates.h" />
     <ClInclude Include="..\src\Graph.h" />
     <ClInclude Include="..\src\Grid.h" />
     <ClInclude Include="..\src\Node.h" />
@@ -166,7 +165,6 @@
     <ClInclude Include="..\src\Scene.h" />
     <ClInclude Include="..\src\SDL_SimpleApp.h" />
     <ClInclude Include="..\src\Vector2D.h" />
-    <ClInclude Include="..\src\WanderState.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\res\spritesheet.png" />

@@ -54,10 +54,7 @@
     <ClCompile Include="..\src\FSM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\WanderState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ChaseState.cpp">
+    <ClCompile Include="..\src\FSMStates.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,10 +110,7 @@
     <ClInclude Include="..\src\FSMState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\WanderState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ChaseState.h">
+    <ClInclude Include="..\src\FSMStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

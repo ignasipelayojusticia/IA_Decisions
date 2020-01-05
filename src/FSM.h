@@ -1,7 +1,7 @@
 #pragma once
 #include "Agent.h"
 #include "FSMState.h"
-#include "WanderState.h"
+#include "FSMStates.h"
 
 class FSM : public Agent::DecisionMaking
 {
