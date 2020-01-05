@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\AStar.cpp" />
+    <ClCompile Include="..\src\ChaseState.cpp" />
     <ClCompile Include="..\src\Connection.cpp" />
     <ClCompile Include="..\src\FSM.cpp" />
     <ClCompile Include="..\src\Graph.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\Agent.h" />
     <ClInclude Include="..\src\AStar.h" />
+    <ClInclude Include="..\src\ChaseState.h" />
     <ClInclude Include="..\src\Connection.h" />
     <ClInclude Include="..\src\FSM.h" />
     <ClInclude Include="..\src\FSMState.h" />

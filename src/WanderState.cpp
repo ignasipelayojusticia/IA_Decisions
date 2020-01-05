@@ -1,4 +1,5 @@
 #include "WanderState.h"
+#include "ChaseState.h"
 #include <iostream>
 #include "Agent.h"
 
@@ -14,9 +15,6 @@ void WanderState::Enter(Agent* agent)
 
 FSMState* WanderState::Update(Agent* agent, float dt)
 {
-	if (agent->pathIsEmpty())
-		followingEnemy = false;
-
 	if (agent->getEnemy() != NULL)
 	{
 		Vector2D enemyPosition = agent->getEnemy()->getPosition();
@@ -24,12 +22,9 @@ FSMState* WanderState::Update(Agent* agent, float dt)
 
 		draw_circle(TheApp::Instance()->getRenderer(), (int)agentPosition.x, (int)agentPosition.y, 150, 255, 255, 255, 255);
 
-		if (Vector2D::Distance(enemyPosition, agent->getPosition()) < 150 && !followingEnemy && !agent->getEnemy()->getHasGun())
+		if (Vector2D::Distance(enemyPosition, agent->getPosition()) < 150)
 		{
-			return new WanderState(agent);
-			followingEnemy = true;
-			agent->createPathToEnemy();
-			std::cout << "path to enemy" << std::endl;
+			return new ChaseState(agent);
 		}
 
 		if (agent->getEnemy()->getHasGun())
@@ -38,7 +33,7 @@ FSMState* WanderState::Update(Agent* agent, float dt)
 		}
 	}
 
-	if (agent->pathIsEmpty() && !followingEnemy)
+	if (agent->pathIsEmpty())
 		agent->createPathToRandomMazePoint();
 
 	return NULL;
