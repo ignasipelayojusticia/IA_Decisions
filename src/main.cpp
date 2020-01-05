@@ -3,7 +3,8 @@
 #include <SDL_image.h>
 
 #include "SDL_SimpleApp.h"
-#include "ScenePathFindingMouse.h"
+#include "SceneFSM.h"
+#include "SceneGOAP.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int main(int argc, char ** argv)
 	
 	SDL_SimpleApp *app = SDL_SimpleApp::Instance();
 
-	Scene *curr_scene = new ScenePathFindingMouse(1);
+	Scene *curr_scene = new SceneFSM();
 	app->setWindowTitle(curr_scene->getTitle());
 
 	
@@ -35,32 +36,14 @@ int main(int argc, char ** argv)
 			if (event.key.keysym.scancode == SDL_SCANCODE_1)
 			{
 				delete(curr_scene);
-				curr_scene = new ScenePathFindingMouse(1);
+				curr_scene = new SceneFSM();
 				app->setWindowTitle(curr_scene->getTitle());
 			}
 			if (event.key.keysym.scancode == SDL_SCANCODE_2)
 			{
 				delete(curr_scene);
-				curr_scene = new ScenePathFindingMouse(2);
+				curr_scene = new SceneGOAP();
 				app->setWindowTitle(curr_scene->getTitle());
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_3)
-			{
-				delete(curr_scene);
-				curr_scene = new ScenePathFindingMouse(3);
-				app->setWindowTitle(curr_scene->getTitle());
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_4)
-			{
-				delete(curr_scene);
-				curr_scene = new ScenePathFindingMouse(4);
-				app->setWindowTitle(curr_scene->getTitle());
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_5)
-			{
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_6)
-			{
 			}
 			if ((event.key.keysym.scancode == SDL_SCANCODE_Q) || (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE))
 			{

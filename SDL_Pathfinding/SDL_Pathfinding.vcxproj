@@ -141,7 +141,8 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\PathFollowing.cpp" />
-    <ClCompile Include="..\src\ScenePathFindingMouse.cpp" />
+    <ClCompile Include="..\src\SceneFSM.cpp" />
+    <ClCompile Include="..\src\SceneGOAP.cpp" />
     <ClCompile Include="..\src\SDL_SimpleApp.cpp" />
     <ClCompile Include="..\src\Seek.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
@@ -159,7 +160,8 @@
     <ClInclude Include="..\src\Path.h" />
     <ClInclude Include="..\src\Pathfinding.h" />
     <ClInclude Include="..\src\PathFollowing.h" />
-    <ClInclude Include="..\src\ScenePathFindingMouse.h" />
+    <ClInclude Include="..\src\SceneFSM.h" />
+    <ClInclude Include="..\src\SceneGOAP.h" />
     <ClInclude Include="..\src\Seek.h" />
     <ClInclude Include="..\src\utils.h" />
     <ClInclude Include="..\src\Scene.h" />

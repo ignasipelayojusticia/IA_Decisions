@@ -119,11 +119,11 @@ void FleeState::Enter(Agent* agent)
 
 FSMState* FleeState::Update(Agent* agent, float dt)
 {
-	draw_circle(TheApp::Instance()->getRenderer(), (int)agent->getPosition().x, (int)agent->getPosition().y, 150, 255, 0, 0, 255);
+	draw_circle(TheApp::Instance()->getRenderer(), (int)agent->getPosition().x, (int)agent->getPosition().y, 200, 255, 0, 0, 255);
 
 	float distanceToEnemy = Vector2D::Distance(agent->getEnemy()->getPosition(), agent->getPosition());
 
-	if (!agent->getEnemy()->getHasGun() && distanceToEnemy < 150)
+	if (!agent->getEnemy()->getHasGun() && distanceToEnemy < 200)
 	{
 		return new ChaseState(agent);
 	}

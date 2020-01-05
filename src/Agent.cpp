@@ -204,9 +204,17 @@ void Agent::createPathFleeingEnemy()
 {
 	Vector2D playerEnemy = enemy->getPosition() - position;
 	playerEnemy = Vector2D::Normalize(playerEnemy);
-	Vector2D destinationPos = position - playerEnemy * 100;
-	if(grid->isValidCell(grid->pix2cell(destinationPos)))
-		calculatePath(GetNodeID(grid->pix2cell(destinationPos), graph->w));
+
+	for (int i = 5; i > 0; i--)
+	{
+		std::cout << 300 - 50 * i << std::endl;
+		Vector2D destinationPos = position - playerEnemy * (300 - 50 * i);
+		if (grid->isValidCell(grid->pix2cell(destinationPos)))
+		{
+			calculatePath(GetNodeID(grid->pix2cell(destinationPos), graph->w));
+			break;
+		}
+	}
 }
 
 void Agent::clearPath()

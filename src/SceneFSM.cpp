@@ -1,8 +1,8 @@
-#include "ScenePathFindingMouse.h"
+#include "SceneFSM.h"
 
 using namespace std;
 
-ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
+SceneFSM::SceneFSM()
 {
 	draw_grid = false;
 	maze = new Grid("../res/maze.csv");
@@ -33,14 +33,14 @@ ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 	// set agent position coords to the center of a random cell
 	for (int i = 0; i < agents.size(); i++)
 	{
-		Vector2D rand_cell(-1,-1);
+		Vector2D rand_cell(-1, -1);
 		while (!maze->isValidCell(rand_cell))
 			rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
 		agents[i]->setPosition(maze->cell2pix(rand_cell));
 	}
 }
 
-ScenePathFindingMouse::~ScenePathFindingMouse()
+SceneFSM::~SceneFSM()
 {
 	if (background_texture)
 		SDL_DestroyTexture(background_texture);
@@ -53,7 +53,7 @@ ScenePathFindingMouse::~ScenePathFindingMouse()
 	}
 }
 
-void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
+void SceneFSM::update(float dtime, SDL_Event* event)
 {
 	/* Keyboard & Mouse events */
 	switch (event->type) {
@@ -77,21 +77,20 @@ void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 	if ((agents[0]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[0]->getPosition()) == coinPosition))
 	{
 		coinPosition = Vector2D(-1, -1);
-		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition()))<3))
+		while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, maze->pix2cell(agents[0]->getPosition())) < 3))
 			coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
 	}
-	
+
 }
 
-void ScenePathFindingMouse::draw()
+void SceneFSM::draw()
 {
 	drawMaze();
-	drawCoin();
 
 	if (draw_grid)
 	{
 		SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 255, 255, 255, 127);
-		for (int i = 0; i < SRC_WIDTH; i+=CELL_SIZE)
+		for (int i = 0; i < SRC_WIDTH; i += CELL_SIZE)
 		{
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), i, 0, i, SRC_HEIGHT);
 		}
@@ -101,16 +100,16 @@ void ScenePathFindingMouse::draw()
 		}
 	}
 
-	for(int i = 0; i < agents.size(); i++)
+	for (int i = 0; i < agents.size(); i++)
 		agents[i]->draw();
 }
 
-const char* ScenePathFindingMouse::getTitle()
+const char* SceneFSM::getTitle()
 {
-	return "SDL Path Finding :: PathFinding Mouse Demo";
+	return "FSM DEMO";
 }
 
-void ScenePathFindingMouse::drawMaze()
+void SceneFSM::drawMaze()
 {
 	SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
 	SDL_Rect rect;
@@ -118,36 +117,37 @@ void ScenePathFindingMouse::drawMaze()
 	for (int j = 0; j < maze->getNumCellY(); j++)
 	{
 		for (int i = 0; i < maze->getNumCellX(); i++)
-		{		
+		{
 			if (!maze->isValidCell(Vector2D((float)i, (float)j)))
 			{
 				SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
 				coords = maze->cell2pix(Vector2D((float)i, (float)j)) - Vector2D((float)CELL_SIZE / 2, (float)CELL_SIZE / 2);
 				rect = { (int)coords.x, (int)coords.y, CELL_SIZE, CELL_SIZE };
 				SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &rect);
-			} else {
+			}
+			else {
 				// Do not draw if it is not necessary (bg is already black)
 			}
 
-			
+
 		}
 	}
 	//Alternative: render a backgroud texture:
 	//SDL_RenderCopy(TheApp::Instance()->getRenderer(), background_texture, NULL, NULL );
 }
 
-void ScenePathFindingMouse::drawCoin()
+void SceneFSM::drawCoin()
 {
 	Vector2D coin_coords = maze->cell2pix(coinPosition);
 	int offset = CELL_SIZE / 2;
-	SDL_Rect dstrect = {(int)coin_coords.x-offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE};
+	SDL_Rect dstrect = { (int)coin_coords.x - offset, (int)coin_coords.y - offset, CELL_SIZE, CELL_SIZE };
 	SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
 }
 
 
-bool ScenePathFindingMouse::loadTextures(char* filename_bg, char* filename_coin)
+bool SceneFSM::loadTextures(char* filename_bg, char* filename_coin)
 {
-	SDL_Surface *image = IMG_Load(filename_bg);
+	SDL_Surface* image = IMG_Load(filename_bg);
 	if (!image) {
 		cout << "IMG_Load: " << IMG_GetError() << endl;
 		return false;
