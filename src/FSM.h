@@ -1,16 +1,16 @@
 #pragma once
 #include "Agent.h"
 #include "FSMState.h"
+#include "FSMStates.h"
 
-
-class FSM :
-	public Agent::DecisionMakingAlgorithm
+class FSM : public Agent::DecisionMaking
 {
 private:
 	FSMState* current_state;
+	Agent* agent;
 public:
-	FSM();
+	FSM(Agent* agent);
 	~FSM();
-	void update(Agent *agent, float dtime);
+	void Update(Agent* agent, float dtime);
 	void ChangeState(FSMState* new_state);
 };

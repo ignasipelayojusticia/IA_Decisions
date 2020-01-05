@@ -1,8 +1,8 @@
-#include "SceneDecisions.h"
+#include "ScenePathFindingMouse.h"
 
 using namespace std;
 
-SceneDecisions::SceneDecisions()
+ScenePathFindingMouse::ScenePathFindingMouse(int behavior)
 {
 	draw_grid = false;
 	maze = new Grid("../res/maze.csv");
@@ -11,26 +11,36 @@ SceneDecisions::SceneDecisions()
 
 	srand((unsigned int)time(NULL));
 
-	Agent *agent = new Agent;
+	Agent* enemy = new Agent;
+	enemy->loadSpriteTexture("../res/zombie2.png", 8);
+	enemy->setMaxVelocity(enemy->getMaxVelocity() * 0.8f);
+	enemy->setBehavior(new PathFollowing);
+	enemy->setPathFindingAlgorithm(new AStar);
+	enemy->setGraph(new Graph(maze));
+	enemy->setDecisionMaking(new FSM(enemy));
+	agents.push_back(enemy);
+
+	Agent* agent = new Agent;
 	agent->loadSpriteTexture("../res/soldier.png", 4);
+	agent->setEnemy(agents[0]);
 	agent->setBehavior(new PathFollowing);
-	agent->setTarget(Vector2D(-20,-20));
+	agent->setPathFindingAlgorithm(new AStar);
+	agent->setGraph(new Graph(maze));
+	agent->setGrid(maze);
+	agent->setDecisionMaking(new FSM(agent));
 	agents.push_back(agent);
 
 	// set agent position coords to the center of a random cell
-	Vector2D rand_cell(-1,-1);
-	while (!maze->isValidCell(rand_cell))
-		rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-	agents[0]->setPosition(maze->cell2pix(rand_cell));
-
-	// set the coin in a random cell (but at least 3 cells far from the agent)
-	coinPosition = Vector2D(-1,-1);
-	while ((!maze->isValidCell(coinPosition)) || (Vector2D::Distance(coinPosition, rand_cell)<3))
-		coinPosition = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
-
+	for (int i = 0; i < agents.size(); i++)
+	{
+		Vector2D rand_cell(-1,-1);
+		while (!maze->isValidCell(rand_cell))
+			rand_cell = Vector2D((float)(rand() % maze->getNumCellX()), (float)(rand() % maze->getNumCellY()));
+		agents[i]->setPosition(maze->cell2pix(rand_cell));
+	}
 }
 
-SceneDecisions::~SceneDecisions()
+ScenePathFindingMouse::~ScenePathFindingMouse()
 {
 	if (background_texture)
 		SDL_DestroyTexture(background_texture);
@@ -43,7 +53,7 @@ SceneDecisions::~SceneDecisions()
 	}
 }
 
-void SceneDecisions::update(float dtime, SDL_Event *event)
+void ScenePathFindingMouse::update(float dtime, SDL_Event *event)
 {
 	/* Keyboard & Mouse events */
 	switch (event->type) {
@@ -54,18 +64,14 @@ void SceneDecisions::update(float dtime, SDL_Event *event)
 	case SDL_MOUSEMOTION:
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			Vector2D cell = maze->pix2cell(Vector2D((float)(event->button.x), (float)(event->button.y)));
-			if (maze->isValidCell(cell)) {
-				agents[0]->addPathPoint(maze->cell2pix(cell));
-			}
-		}
+			agents[0]->changeHasGun();
 		break;
 	default:
 		break;
 	}
 
-	agents[0]->update(dtime, event);
+	for (int i = 0; i < agents.size(); i++)
+		agents[i]->update(dtime, event);
 
 	// if we have arrived to the coin, replace it in a random cell!
 	if ((agents[0]->getCurrentTargetIndex() == -1) && (maze->pix2cell(agents[0]->getPosition()) == coinPosition))
@@ -77,7 +83,7 @@ void SceneDecisions::update(float dtime, SDL_Event *event)
 	
 }
 
-void SceneDecisions::draw()
+void ScenePathFindingMouse::draw()
 {
 	drawMaze();
 	drawCoin();
@@ -95,15 +101,16 @@ void SceneDecisions::draw()
 		}
 	}
 
-	agents[0]->draw();
+	for(int i = 0; i < agents.size(); i++)
+		agents[i]->draw();
 }
 
-const char* SceneDecisions::getTitle()
+const char* ScenePathFindingMouse::getTitle()
 {
 	return "SDL Path Finding :: PathFinding Mouse Demo";
 }
 
-void SceneDecisions::drawMaze()
+void ScenePathFindingMouse::drawMaze()
 {
 	SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
 	SDL_Rect rect;
@@ -115,7 +122,7 @@ void SceneDecisions::drawMaze()
 			if (!maze->isValidCell(Vector2D((float)i, (float)j)))
 			{
 				SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 0, 255, 255);
-				coords = maze->cell2pix(Vector2D((float)i,(float)j)) - Vector2D( (float)CELL_SIZE/2, (float)CELL_SIZE/2 );
+				coords = maze->cell2pix(Vector2D((float)i, (float)j)) - Vector2D((float)CELL_SIZE / 2, (float)CELL_SIZE / 2);
 				rect = { (int)coords.x, (int)coords.y, CELL_SIZE, CELL_SIZE };
 				SDL_RenderFillRect(TheApp::Instance()->getRenderer(), &rect);
 			} else {
@@ -123,14 +130,13 @@ void SceneDecisions::drawMaze()
 			}
 
 			
-			
 		}
 	}
 	//Alternative: render a backgroud texture:
 	//SDL_RenderCopy(TheApp::Instance()->getRenderer(), background_texture, NULL, NULL );
 }
 
-void SceneDecisions::drawCoin()
+void ScenePathFindingMouse::drawCoin()
 {
 	Vector2D coin_coords = maze->cell2pix(coinPosition);
 	int offset = CELL_SIZE / 2;
@@ -139,7 +145,7 @@ void SceneDecisions::drawCoin()
 }
 
 
-bool SceneDecisions::loadTextures(char* filename_bg, char* filename_coin)
+bool ScenePathFindingMouse::loadTextures(char* filename_bg, char* filename_coin)
 {
 	SDL_Surface *image = IMG_Load(filename_bg);
 	if (!image) {

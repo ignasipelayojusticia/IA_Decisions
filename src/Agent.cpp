@@ -31,6 +31,16 @@ void Agent::setBehavior(SteeringBehavior *behavior)
 	steering_behaviour = behavior;
 }
 
+void Agent::setPathFindingAlgorithm(Pathfinding * algorithm)
+{
+	pathfinding_Algorithm = algorithm;
+}
+
+void Agent::setMaxVelocity(float maxVel)
+{
+	max_velocity = maxVel;
+}
+
 Vector2D Agent::getPosition()
 {
 	return position;
@@ -76,10 +86,32 @@ void Agent::setVelocity(Vector2D _velocity)
 	velocity = _velocity;
 }
 
+void Agent::setGraph(Graph* _graph) 
+{
+	graph = _graph;
+}
+
+void Agent::setGrid(Grid* _grid)
+{
+	grid = _grid;
+}
+
+void Agent::setDecisionMaking(DecisionMaking* decisionMaking)
+{
+	brain = decisionMaking;
+}
+
+void Agent::changeHasGun()
+{
+	hasGun = !hasGun;
+	if (hasGun)
+		std::cout << "Now enemy has gun" << std::endl;
+	else
+		std::cout << "Now enemy doesn't have gun" << std::endl;
+}
+
 void Agent::update(float dtime, SDL_Event *event)
 {
-
-	//cout << "agent update:" << endl;
 
 	switch (event->type) {
 		/* Keyboard & Mouse events */
@@ -93,6 +125,9 @@ void Agent::update(float dtime, SDL_Event *event)
 
 	// Apply the steering behavior
 	steering_behaviour->applySteeringForce(this, dtime);
+
+	//Apply decision making algorithm
+	brain->Update(this, dtime);
 	
 	// Update orientation
 	if (velocity.Length())
@@ -126,9 +161,52 @@ int Agent::getPathSize()
 	return path.points.size();
 }
 
+Graph* Agent::getGraph() {
+	return graph;
+}
+
 Vector2D Agent::getPathPoint(int idx)
 {
 	return path.points[idx];
+}
+
+int Agent::getRandomMazePoint()
+{
+	auto it = graph->map.begin();
+	std::advance(it, rand() % graph->map.size());
+	int newMazePoint = it->first;
+	return newMazePoint;
+}
+
+Agent* Agent::getEnemy()
+{
+	return enemy;
+}
+
+bool Agent::getHasGun()
+{
+	return hasGun;
+}
+
+
+void Agent::createPathToRandomMazePoint()
+{
+	calculatePath(getRandomMazePoint());
+}
+
+void Agent::createPathToEnemy()
+{
+	int finalNode = GetNodeID(grid->pix2cell(enemy->getPosition()), graph->w);
+	calculatePath(finalNode);
+}
+
+void Agent::createPathFleeingEnemy()
+{
+	Vector2D playerEnemy = enemy->getPosition() - position;
+	playerEnemy = Vector2D::Normalize(playerEnemy);
+	Vector2D destinationPos = position - playerEnemy * 100;
+	if(grid->isValidCell(grid->pix2cell(destinationPos)))
+		calculatePath(GetNodeID(grid->pix2cell(destinationPos), graph->w));
 }
 
 void Agent::clearPath()
@@ -142,15 +220,91 @@ void Agent::setCurrentTargetIndex(int idx)
 	currentTargetIndex = idx;
 }
 
+void Agent::setEnemy(Agent* agent)
+{
+	enemy = agent;
+}
+
+void Agent::calculatePath(int _initialNodeID, int _finalNodeID, Grid* _grid)
+{
+	clearPath();
+	path = pathfinding_Algorithm->calculatePath(_initialNodeID, _finalNodeID, graph, _grid);
+}
+
+void Agent::calculatePath(int _finalNodeID)
+{
+	clearPath();
+	int initialNodeID = GetNodeID(grid->pix2cell(getPosition()), graph->w);
+	path = pathfinding_Algorithm->calculatePath(initialNodeID, _finalNodeID, graph, grid);
+}
+
+void Agent::calculateMultiplePath(int _initialNodeID, int _finalNodeID, std::vector<int> _vID, Grid* grid) 
+{
+	clearPath();
+	path = pathfinding_Algorithm->calculateMultiplePath(_initialNodeID, _finalNodeID, _vID, graph, grid);
+}
+
+bool Agent::pathIsEmpty()
+{
+	return path.points.size() == 0;
+}
+
+void Agent::addEnemyCost(int _enemyPosID, Grid* grid)
+{
+	//Afegim el cost al node on està l'enemic amb un cost molt alt
+	addCostToNode(_enemyPosID, 200);
+	auto it = graph->map.find(_enemyPosID);
+	if (it != graph->map.end())
+	{
+		for each (Connection* connection in it->second)
+		{
+			auto it2 = graph->map.find(it->first);
+			for each (Connection* childConnection in it2->second)
+			{
+				//Expandim la frontera del cost als veins més llunyans
+				addCostToNode(childConnection->nodeToID, 5);
+			}
+			//Expandim la frontera del cost als veins mes propers
+			addCostToNode(connection->nodeToID, 10);
+		}
+	}
+
+	if (path.points.size() > 0) // Estem recorrent un path
+	{
+		calculatePath( GetNodeID(grid->pix2cell(getPosition()), graph->w) , GetNodeID(grid->pix2cell(path.points[path.points.size()-1]), graph->w), grid);
+	}
+}
+
+void Agent::addCostToNode(int _nodeID, float costToAdd)
+{
+	auto it = graph->map.find(_nodeID);
+	if (it != graph->map.end())
+	{
+		for each (Connection * c in it->second)
+		{
+			auto it2 = graph->map.find(c->nodeToID);
+			for each (Connection * c2 in it2->second)
+			{
+				if (c2->nodeToID == _nodeID)
+				{
+					c2->cost *= costToAdd;
+					break;
+				}
+			}
+		}
+	}
+}
+
 void Agent::draw()
 {
 	// Path
-	for (int i = 0; i < (int)path.points.size(); i++)
+	
+	/*for (int i = 0; i < (int)path.points.size(); i++)
 	{
 		draw_circle(TheApp::Instance()->getRenderer(), (int)(path.points[i].x), (int)(path.points[i].y), 15, 255, 255, 0, 255);
 		if (i > 0)
 			SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)(path.points[i - 1].x), (int)(path.points[i - 1].y), (int)(path.points[i].x), (int)(path.points[i].y));
-	}
+	}*/
 
 	if (draw_sprite)
 	{
@@ -171,8 +325,6 @@ void Agent::draw()
 		draw_circle(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, 15, 255, 255, 255, 255);
 		SDL_RenderDrawLine(TheApp::Instance()->getRenderer(), (int)position.x, (int)position.y, (int)(position.x+15*cos(orientation*DEG2RAD)), (int)(position.y+15*sin(orientation*DEG2RAD)));
 	}
-
-	
 }
 
 bool Agent::loadSpriteTexture(char* filename, int _num_frames)

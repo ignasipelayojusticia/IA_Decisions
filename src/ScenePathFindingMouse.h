@@ -8,15 +8,17 @@
 #include "Agent.h"
 #include "Seek.h"
 #include "PathFollowing.h"
-#include "Grid.h"
 #include "FSM.h"
+#include "AStar.h"
+#include "Grid.h"
 
-class SceneDecisions :
+class ScenePathFindingMouse :
 	public Scene
 {
 public:
-	SceneDecisions();
-	~SceneDecisions();
+	ScenePathFindingMouse();
+	ScenePathFindingMouse(int behavior);
+	~ScenePathFindingMouse();
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();

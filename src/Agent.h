@@ -5,8 +5,11 @@
 #include <SDL_image.h>
 #include "SDL_SimpleApp.h"
 #include "Path.h"
+#include "Pathfinding.h"
+#include "Graph.h"
 #include "Vector2D.h"
 #include "utils.h"
+#include <cstdlib>
 
 class Agent
 {
@@ -18,33 +21,34 @@ public:
 		virtual ~SteeringBehavior() {};
 		virtual void applySteeringForce(Agent *agent, float dtime) {};
 	};
-	class PathFindingAlgorithm
+	
+	class DecisionMaking
 	{
 	public:
-		PathFindingAlgorithm() {};
-		virtual ~PathFindingAlgorithm() {};
-		virtual void run(Agent *agent, float dtime) {};
+		DecisionMaking() {};
+		virtual ~DecisionMaking() {};
+		virtual void Update(Agent* agent, float dtime) {};
 	};
-	class DecisionMakingAlgorithm
-	{
-	public:
-		DecisionMakingAlgorithm() {};
-		virtual ~DecisionMakingAlgorithm() {};
-		virtual void update(Agent *agent, float dtime) {};
-	};
+
 private:
 	SteeringBehavior *steering_behaviour;
 	Vector2D position;
 	Vector2D velocity;
 	Vector2D target;
 
-	// Pathfinding
-	PathFindingAlgorithm* pathfinder;
-	Path path;
-	int currentTargetIndex;
+	//Enemy
+	Agent* enemy;
+	bool hasGun;
 
-	// Decision Making
-	DecisionMakingAlgorithm* brain;
+	//Pathfinding
+	Pathfinding* pathfinding_Algorithm;
+	Graph* graph;
+	int currentTargetIndex;
+	Path path;
+	Grid* grid;
+
+	//Decision Making
+	DecisionMaking* brain;
 
 	float mass;
 	float orientation;
@@ -58,13 +62,9 @@ private:
 	int sprite_h;
 
 public:
+
 	Agent();
 	~Agent();
-
-	void update(float dtime, SDL_Event *event);
-	void draw();
-	bool Agent::loadSpriteTexture(char* filename, int num_frames = 1);
-
 	Vector2D getPosition();
 	Vector2D getTarget();
 	Vector2D getVelocity();
@@ -72,15 +72,36 @@ public:
 	float getMaxForce();
 	float getMass();
 	void setBehavior(SteeringBehavior *behavior);
+	void setPathFindingAlgorithm(Pathfinding *algorithm);
 	void setPosition(Vector2D position);
 	void setTarget(Vector2D target);
 	void setVelocity(Vector2D velocity);
-
+	void setMaxVelocity(float maxVel);
+	void setGraph(Graph* graph);
+	void setGrid(Grid* grid);
+	void setDecisionMaking(DecisionMaking* decisionMaking);
+	void setEnemy(Agent* agent);
+	void changeHasGun();
 	void addPathPoint(Vector2D point);
 	void setCurrentTargetIndex(int idx);
+	void calculatePath(int _initialNodeID, int _finalNodeID, Grid* grid);
+	void calculatePath(int _finalNodeID);
+	void calculateMultiplePath(int _initialNodeID, int _finalNodeID, std::vector<int> _vID, Grid* grid);
+	void addEnemyCost(int _enemyPosID, Grid* grid);
+	void addCostToNode(int _nodeID, float costToAdd);
 	int getCurrentTargetIndex();
 	int getPathSize();
+	Graph* getGraph();
 	Vector2D getPathPoint(int idx);
+	int getRandomMazePoint();
+	Agent* getEnemy();
+	bool getHasGun();
+	void createPathToRandomMazePoint();
+	void createPathToEnemy();
+	void createPathFleeingEnemy();
 	void clearPath();
-
+	bool pathIsEmpty();
+	void update(float dtime, SDL_Event *event);
+	void draw();
+	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);	
 };

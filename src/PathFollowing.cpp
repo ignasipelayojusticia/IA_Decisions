@@ -11,7 +11,7 @@ PathFollowing::~PathFollowing()
 void PathFollowing::applySteeringForce(Agent *agent, float dtime)
 {
 	//There is a path and we have not started to follow it
-	if ((agent->getCurrentTargetIndex() == -1) && (agent->getPathSize()>0))
+	if ((agent->getCurrentTargetIndex() == -1) && (agent->getPathSize() > 0))
 		agent->setCurrentTargetIndex(0);
 
 	//We are in the middle of a path
