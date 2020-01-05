@@ -7,9 +7,10 @@ class FSM : public Agent::DecisionMaking
 {
 private:
 	FSMState* current_state;
+	Agent* agent;
 public:
 	FSM(Agent* agent);
 	~FSM();
 	void Update(Agent* agent, float dtime);
-	void ChangeState(FSMState* new_state);
+	//void ChangeState(FSMState* new_state);
 };

@@ -188,6 +188,7 @@ bool Agent::getHasGun()
 	return hasGun;
 }
 
+
 void Agent::createPathToRandomMazePoint()
 {
 	calculatePath(getRandomMazePoint());

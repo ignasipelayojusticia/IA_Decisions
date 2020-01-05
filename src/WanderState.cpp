@@ -12,7 +12,7 @@ void WanderState::Enter(Agent* agent)
 	std::cout << "Wander enter" << std::endl;
 }
 
-void WanderState::Update(Agent* agent, float dt)
+FSMState* WanderState::Update(Agent* agent, float dt)
 {
 	if (agent->pathIsEmpty())
 		followingEnemy = false;
@@ -26,6 +26,7 @@ void WanderState::Update(Agent* agent, float dt)
 
 		if (Vector2D::Distance(enemyPosition, agent->getPosition()) < 150 && !followingEnemy && !agent->getEnemy()->getHasGun())
 		{
+			return new WanderState(agent);
 			followingEnemy = true;
 			agent->createPathToEnemy();
 			std::cout << "path to enemy" << std::endl;
@@ -39,6 +40,8 @@ void WanderState::Update(Agent* agent, float dt)
 
 	if (agent->pathIsEmpty() && !followingEnemy)
 		agent->createPathToRandomMazePoint();
+
+	return NULL;
 }
 
 void WanderState::Exit(Agent* agent)
