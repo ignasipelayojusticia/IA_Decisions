@@ -7,7 +7,6 @@ class FSM : public Agent::DecisionMaking
 {
 private:
 	FSMState* current_state;
-	Agent* agent;
 public:
 	FSM(Agent* agent);
 	~FSM();

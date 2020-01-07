@@ -207,7 +207,6 @@ void Agent::createPathFleeingEnemy()
 
 	for (int i = 5; i > 0; i--)
 	{
-		std::cout << 300 - 50 * i << std::endl;
 		Vector2D destinationPos = position - playerEnemy * (300 - 50 * i);
 		if (grid->isValidCell(grid->pix2cell(destinationPos)))
 		{

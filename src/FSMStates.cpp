@@ -37,7 +37,10 @@ FSMState* WanderState::Update(Agent* agent, float dt)
 		draw_circle(TheApp::Instance()->getRenderer(), (int)agentPosition.x, (int)agentPosition.y, 150, 255, 255, 255, 255);
 
 		if (Vector2D::Distance(enemyPosition, agent->getPosition()) < 150)
+		{
+			Exit(agent);
 			return new ChaseState(agent);
+		}
 	}
 
 	if (agent->pathIsEmpty())
@@ -79,7 +82,10 @@ FSMState* ChaseState::Update(Agent* agent, float dt)
 	float distanceToEnemy = Vector2D::Distance(agent->getEnemy()->getPosition(), agent->getPosition());
 
 	if (agent->getEnemy()->getHasGun())
+	{
+		Exit(agent);
 		return new FleeState(agent);
+	}
 
 	if (agent->pathIsEmpty() && distanceToEnemy < 150)
 	{
@@ -88,7 +94,10 @@ FSMState* ChaseState::Update(Agent* agent, float dt)
 		return NULL;
 	}
 	else if (agent->pathIsEmpty() && distanceToEnemy > 150)
+	{
+		Exit(agent);
 		return new WanderState(agent);
+	}
 }
 
 void ChaseState::Exit(Agent* agent) {}
@@ -125,10 +134,14 @@ FSMState* FleeState::Update(Agent* agent, float dt)
 
 	if (!agent->getEnemy()->getHasGun() && distanceToEnemy < 200)
 	{
+		Exit(agent);
 		return new ChaseState(agent);
 	}
 	else if (distanceToEnemy > 150)
+	{
+		Exit(agent);
 		return new WanderState(agent);
+	}
 
 	if (agent->pathIsEmpty())
 		agent->createPathFleeingEnemy();
