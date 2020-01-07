@@ -65,7 +65,9 @@ void ChaseState::ShowStateOnConsole()
 
 void ChaseState::Enter(Agent* agent)
 {
-	system("cls");
+	if(agent->getEnemy() != NULL)
+		system("cls");
+
 	ShowStateOnConsole();
 	if (agent->getEnemy()->getHasGun())
 		std::cout << "Enemy has gun" << std::endl;
@@ -116,7 +118,9 @@ void FleeState::ShowStateOnConsole()
 
 void FleeState::Enter(Agent* agent)
 {
-	system("cls");
+	if (agent->getEnemy() != NULL)
+		system("cls");
+
 	ShowStateOnConsole();
 	if (agent->getEnemy()->getHasGun())
 		std::cout << "Enemy has gun" << std::endl;

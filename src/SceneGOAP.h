@@ -9,6 +9,7 @@
 #include "Seek.h"
 #include "PathFollowing.h"
 #include "FSM.h"
+#include "GOAP.h"
 #include "AStar.h"
 #include "Grid.h"
 

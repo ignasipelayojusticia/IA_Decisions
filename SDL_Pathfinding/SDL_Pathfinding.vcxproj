@@ -133,9 +133,11 @@
   <ItemGroup>
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\AStar.cpp" />
+    <ClCompile Include="..\src\BlackBoard.cpp" />
     <ClCompile Include="..\src\Connection.cpp" />
     <ClCompile Include="..\src\FSM.cpp" />
     <ClCompile Include="..\src\FSMStates.cpp" />
+    <ClCompile Include="..\src\GOAP.cpp" />
     <ClCompile Include="..\src\Graph.cpp" />
     <ClCompile Include="..\src\Grid.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -150,10 +152,12 @@
   <ItemGroup>
     <ClInclude Include="..\src\Agent.h" />
     <ClInclude Include="..\src\AStar.h" />
+    <ClInclude Include="..\src\BlackBoard.h" />
     <ClInclude Include="..\src\Connection.h" />
     <ClInclude Include="..\src\FSM.h" />
     <ClInclude Include="..\src\FSMState.h" />
     <ClInclude Include="..\src\FSMStates.h" />
+    <ClInclude Include="..\src\GOAP.h" />
     <ClInclude Include="..\src\Graph.h" />
     <ClInclude Include="..\src\Grid.h" />
     <ClInclude Include="..\src\Node.h" />

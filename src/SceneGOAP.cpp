@@ -28,7 +28,7 @@ SceneGOAP::SceneGOAP()
 	agent->setPathFindingAlgorithm(new AStar);
 	agent->setGraph(new Graph(maze));
 	agent->setGrid(maze);
-	agent->setDecisionMaking(new FSM(agent));
+	agent->setDecisionMaking(new GOAP(agent));
 	agents.push_back(agent);
 
 	// set agent position coords to the center of a random cell
@@ -66,8 +66,6 @@ void SceneGOAP::update(float dtime, SDL_Event* event)
 	case SDL_MOUSEBUTTONDOWN:
 		if (event->button.button == SDL_BUTTON_LEFT)
 			agents[0]->changeHasGun();
-		if (event->button.button == SDL_BUTTON_RIGHT)
-			agents[1]->changeHasGun();
 		break;
 	default:
 		break;

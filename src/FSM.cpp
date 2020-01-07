@@ -9,6 +9,7 @@ FSM::FSM(Agent* agent)
 
 FSM::~FSM()
 {
+	delete current_state;
 }
 
 void FSM::Update(Agent* agent, float dtime)

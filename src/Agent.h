@@ -7,6 +7,7 @@
 #include "Path.h"
 #include "Pathfinding.h"
 #include "Graph.h"
+#include "BlackBoard.h"
 #include "Vector2D.h"
 #include "utils.h"
 #include <cstdlib>
@@ -49,6 +50,8 @@ private:
 
 	//Decision Making
 	DecisionMaking* brain;
+
+	BlackBoard blackBoard;
 
 	float mass;
 	float orientation;
