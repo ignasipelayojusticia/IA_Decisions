@@ -2,7 +2,6 @@
 
 BlackBoard::BlackBoard()
 {
-	std::cout << gameState.convertIntToBinary(10) << std::flush << std::endl;
 }
 
 BlackBoard::~BlackBoard()
@@ -10,122 +9,102 @@ BlackBoard::~BlackBoard()
 
 }
 
-void BlackBoard::SetAgentIsAlive(bool value)
+void GameState::PrintGameState()
 {
-	gameState.agentIsAlive = value;
+	std::cout << "Agent is Alive:            ";
+	if (agentIsAlive == Condition::TRUE) std::cout << "YES\n";
+	else if (agentIsAlive == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Agent Has Gun:             ";
+	if (agentHasGun == Condition::TRUE) std::cout << "YES\n";
+	else if (agentHasGun == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Weapon Reloaded:           ";
+	if (weaponReloaded == Condition::TRUE) std::cout << "YES\n";
+	else if (weaponReloaded == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Agent Has Bomb:            ";
+	if (agentHasBomb == Condition::TRUE) std::cout << "YES\n";
+	else if (agentHasBomb == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Enemy Is Visible:          ";
+	if (enemyIsVisible == Condition::TRUE) std::cout << "YES\n";
+	else if (enemyIsVisible == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Enemy Is Aligned:          ";
+	if (enemyIsAligned == Condition::TRUE) std::cout << "YES\n";
+	else if (enemyIsAligned == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Enemy Is Close:            ";
+	if (enemyIsClose == Condition::TRUE) std::cout << "YES\n";
+	else if (enemyIsClose == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
+
+	std::cout << "Enemy Is Alive:            ";
+	if (enemyIsAlive == Condition::TRUE) std::cout << "YES\n";
+	else if (enemyIsAlive == Condition::FALSE) std::cout << "NO\n";
+	else std::cout << "NVM\n";
 }
 
-bool BlackBoard::GetAgentIsAlive()
+
+SearchEnemy::SearchEnemy()
 {
-	return gameState.agentIsAlive;
+	actionName = "Search Enemy";
+
+	preconditions = GameState(Condition::TRUE, Condition::NVM, Condition::NVM, Condition::NVM, Condition::FALSE, Condition::NVM, Condition::NVM, Condition::TRUE);
+	effects = GameState(Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::NVM, Condition::NVM, Condition::NVM);
 }
 
-void BlackBoard::SetAgentHasGun(bool value)
+SearchWeapon::SearchWeapon()
 {
-	gameState.agentHasGun = value;
+	actionName = "Search Weapon";
+
+	preconditions = GameState(Condition::TRUE, Condition::FALSE, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM);
+	effects = GameState(Condition::NVM, Condition::TRUE, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM);
 }
 
-bool BlackBoard::GetAgentHasGun()
+Chase::Chase()
 {
-	return gameState.agentHasGun;
+	actionName = "Chase";
+
+	preconditions = GameState(Condition::TRUE, Condition::TRUE, Condition::TRUE, Condition::NVM, Condition::TRUE, Condition::NVM, Condition::FALSE, Condition::TRUE);
+	effects = GameState(Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::NVM);
 }
 
-void BlackBoard::SetWeaponReloaded(bool value)
+Aim::Aim()
 {
-	gameState.weaponReloaded = value;
+	actionName = "Aim";
+
+	preconditions = GameState(Condition::TRUE, Condition::TRUE, Condition::TRUE, Condition::NVM, Condition::TRUE, Condition::FALSE, Condition::TRUE, Condition::TRUE);
+	effects = GameState(Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::NVM, Condition::NVM);
 }
 
-bool BlackBoard::GetWeaponReloaded()
+Shoot::Shoot()
 {
-	return gameState.weaponReloaded;
+	actionName = "Shoot";
+
+	preconditions = GameState(Condition::TRUE, Condition::TRUE, Condition::TRUE, Condition::NVM, Condition::TRUE, Condition::TRUE, Condition::TRUE, Condition::TRUE);
+	effects = GameState(Condition::NVM, Condition::NVM, Condition::FALSE, Condition::NVM, Condition::FALSE, Condition::FALSE, Condition::FALSE, Condition::FALSE);
 }
 
-void BlackBoard::SetAgentHasBomb(bool value)
+DetonateBomb::DetonateBomb()
 {
-	gameState.agentHasBomb = value;
+	actionName = "Detonate Bomb";
+
+	preconditions = GameState(Condition::TRUE, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::TRUE);
+	effects = GameState(Condition::FALSE, Condition::NVM, Condition::NVM, Condition::FALSE, Condition::FALSE, Condition::FALSE, Condition::FALSE, Condition::FALSE);
 }
 
-bool BlackBoard::GetAgentHasBomb()
+Flee::Flee()
 {
-	return gameState.agentHasBomb;
+	actionName = "Flee";
+
+	preconditions = GameState(Condition::TRUE, Condition::FALSE, Condition::NVM, Condition::NVM, Condition::TRUE, Condition::NVM, Condition::TRUE, Condition::TRUE);
+	effects = GameState(Condition::NVM, Condition::NVM, Condition::NVM, Condition::NVM, Condition::FALSE, Condition::NVM, Condition::FALSE, Condition::NVM);
 }
-
-void BlackBoard::SetEnemyIsVisible(bool value)
-{
-	gameState.enemyIsVisible = value;
-}
-
-bool BlackBoard::GetEnemyIsVisible()
-{
-	return gameState.enemyIsVisible;
-}
-
-void BlackBoard::SetEnemyIsAligned(bool value)
-{
-	gameState.enemyIsAligned = value;
-}
-
-bool BlackBoard::GetEnemyIsAligned()
-{
-	return gameState.enemyIsAligned;
-}
-
-void BlackBoard::SetEnemyIsClose(bool value)
-{
-	gameState.enemyIsClose = value;
-}
-
-bool BlackBoard::GetEnemyIsClose()
-{
-	return gameState.enemyIsClose;
-}
-
-void BlackBoard::SetEnemyIsAlive(bool value)
-{
-	gameState.agentIsAlive = value;
-}
-
-bool BlackBoard::GetEnemyIsAlive()
-{
-	return gameState.enemyIsAlive;
-}
-
-int BlackBoard::GameState::convertBoolToBinary()
-{
-	int currentGameState[8];
-	currentGameState[0] = agentIsAlive;
-	currentGameState[1] = agentHasGun * 10;
-	currentGameState[2] = weaponReloaded * 100;
-	currentGameState[3] = agentHasBomb * 1000;
-	currentGameState[4] = enemyIsVisible * 10000;
-	currentGameState[5] = enemyIsAligned * 100000;
-	currentGameState[6] = enemyIsClose * 10000000;
-	currentGameState[7] = enemyIsAlive * 100000000;
-
-	int totalBinary = 0;
-
-	for (int i = 0; i < 8; i++)
-		totalBinary += currentGameState[i];
-
-	return totalBinary;
-}
-
-int BlackBoard::GameState::convertBinaryToInt(int binary)
-{
-	int binaryNumber = binary;
-	int decValue = 0;
-
-	int base = 1;
-
-	int temp = binaryNumber;
-	while (temp)
-	{
-		int lastDigit = temp % 10;
-		temp = temp / 10;
-
-		decValue += lastDigit * base;
-		base = base * 2;
-	}
-	return decValue;
-}
-
